@@ -1,0 +1,15 @@
+import {
+  Users,
+  BookOpen,
+  GraduationCap,
+  FlaskConical,
+  Mic2,
+} from "lucide-react";
+
+export const NAV_LINKS = [
+  { name: "Users", to: "/users", icon: Users },               
+  { name: "Books", to: "/books", icon: BookOpen },            
+  { name: "Course", to: "/course", icon: GraduationCap },     
+  { name: "Research", to: "/research", icon: FlaskConical },  
+  { name: "Podcast", to: "/podcast", icon: Mic2 },               
+];
