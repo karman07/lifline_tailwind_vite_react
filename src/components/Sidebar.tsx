@@ -79,7 +79,7 @@ const Sidebar = () => {
           className="p-4 border-b"
           style={{ borderColor: `${COLORS.grayText}20` }}
         >
-          <div className="text-2xl font-bold text-gray-800">Admin Pannel</div>
+          <div className="text-2xl font-bold text-gray-800">Admin Panel</div>
         </div>
         <div className="flex-1 overflow-y-auto">{renderLinks()}</div>
         <div
