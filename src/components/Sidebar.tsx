@@ -7,33 +7,12 @@ import { COLORS } from "@/constants/colors";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const [user, setUser] = useState<{
-    name: string;
-    email: string;
-    image?: string;
-  } | null>(null);
-
-  useEffect(() => {
-    console.log(localStorage.getItem("user"));
-    const handleResize = () => {
-      if (window.innerWidth > 1024) setIsOpen(false);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const [user, setUser] = useState<{ name: string; email: string; image?: string } | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    // if (storedUser) {
-    //   try {
-    //     setUser(JSON.parse(storedUser));
-    //     console.log(user)
-    //   } catch (err) {
-    //     console.error("Failed to parse user:", err);
-    //   }
-    // }
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // ✅ correct
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
@@ -66,22 +45,19 @@ const Sidebar = () => {
   const userImage = user?.image || "https://avatar.iran.liara.run/public";
 
   return (
-    <div className="relative">
+    <>
       {/* Desktop Sidebar */}
-      <nav
-        className="fixed h-screen w-64 hidden lg:flex flex-col"
+      <aside
+        className="hidden lg:flex fixed left-0 top-0 h-full w-64 flex-col z-10 shadow-md"
         style={{
           backgroundColor: COLORS.white,
           borderRight: `1px solid ${COLORS.grayText}20`,
         }}
       >
-        <div
-          className="p-4 border-b"
-          style={{ borderColor: `${COLORS.grayText}20` }}
-        >
-          <div className="text-2xl font-bold text-gray-800">Admin Panel</div>
+        <div className="p-4 border-b" style={{ borderColor: `${COLORS.grayText}20` }}>
+          <h1 className="text-2xl font-bold text-gray-800">Admin Panel</h1>
         </div>
-        <div className="flex-1 overflow-y-auto">{renderLinks()}</div>
+        <nav className="flex-1 overflow-y-auto">{renderLinks()}</nav>
         <div
           className="p-4 border-t flex items-center"
           style={{ borderColor: `${COLORS.grayText}20` }}
@@ -92,55 +68,57 @@ const Sidebar = () => {
             <p className="text-xs text-gray-500">{userEmail}</p>
           </div>
         </div>
-      </nav>
+      </aside>
 
       {/* Mobile Toggle Button */}
       <button
         type="button"
-        className="lg:hidden fixed top-4 right-4 z-20 p-2 rounded-md"
-        style={{ backgroundColor: "#1F2937", color: "#D1D5DB" }}
-        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-4 left-4 z-30 p-2 rounded-md bg-gray-800 text-gray-100"
+        onClick={() => setIsOpen(true)}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        <Menu className="h-6 w-6" />
       </button>
 
       {/* Mobile Sidebar */}
       {isOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-10 backdrop-blur-sm"
-          style={{ backgroundColor: "rgba(38,38,38,0.8)" }}
-          onClick={() => setIsOpen(false)}
-        >
+        <div className="lg:hidden fixed inset-0 z-20 flex">
+          {/* Overlay */}
           <div
-            className="fixed inset-y-0 left-0 w-64 shadow-lg flex flex-col"
-            style={{ backgroundColor: COLORS.white }}
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 bg-black bg-opacity-50"
+            onClick={() => setIsOpen(false)}
+          ></div>
+
+          {/* Sidebar */}
+          <aside
+            className="relative w-64 h-full bg-white shadow-lg z-30 flex flex-col"
+            style={{
+              backgroundColor: COLORS.white,
+            }}
           >
-            <div
-              className="p-4 border-b"
-              style={{ borderColor: `${COLORS.grayText}20` }}
-            >
-              <div className="text-2xl font-bold text-gray-800">FoodAdmin</div>
+            <div className="flex justify-between items-center p-4 border-b" style={{ borderColor: `${COLORS.grayText}20` }}>
+              <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
+              <button
+                className="p-1 text-gray-600"
+                onClick={() => setIsOpen(false)}
+              >
+                <X className="h-6 w-6" />
+              </button>
             </div>
-            <div className="flex-1 overflow-y-auto">{renderLinks(true)}</div>
+            <nav className="flex-1 overflow-y-auto">{renderLinks(true)}</nav>
             <div
               className="p-4 border-t flex items-center"
               style={{ borderColor: `${COLORS.grayText}20` }}
             >
-              <img
-                src={userImage}
-                alt="User"
-                className="w-10 h-10 rounded-full"
-              />
+              <img src={userImage} alt="User" className="w-10 h-10 rounded-full" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-700">{userName}</p>
                 <p className="text-xs text-gray-500">{userEmail}</p>
               </div>
             </div>
-          </div>
+          </aside>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

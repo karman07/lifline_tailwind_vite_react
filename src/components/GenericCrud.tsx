@@ -42,7 +42,14 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
       setForm(entry);
       setEditingId(entry._id);
     } else {
-      setForm({});
+      const emptyForm: Record<string, any> = {};
+      schema.forEach((field) => {
+        if (field.type === "array") emptyForm[field.name] = [];
+        else if (field.type === "boolean") emptyForm[field.name] = false;
+        else if (field.type === "number") emptyForm[field.name] = 0;
+        else emptyForm[field.name] = "";
+      });
+      setForm(emptyForm);
       setEditingId(null);
     }
     setFiles({});
@@ -84,17 +91,30 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
   };
 
   const handleSubmit = async () => {
+    // ✅ FIXED VALIDATION INCLUDING FILES
+    for (const field of schema) {
+      if (field.required) {
+        const isFile = field.type === "file";
+        const hasValue = isFile ? files[field.name] : form[field.name];
+        if (!hasValue || hasValue === "") {
+          alert(`Please fill out the required field: ${field.name}`);
+          return;
+        }
+      }
+    }
+
     const formData = new FormData();
 
     schema.forEach(({ name, type }) => {
+      const value = form[name];
       if (type === "file" && files[name]) {
-        formData.append(name, files[name] as Blob);
+        formData.append(name, files[name] as Blob); // ✅ field name = 'file'
       } else if (type === "array") {
-        (form[name] || []).forEach((item: string) =>
+        (value || []).forEach((item: string) =>
           formData.append(`${name}[]`, item)
         );
-      } else {
-        formData.append(name, form[name]);
+      } else if (value !== undefined && value !== null) {
+        formData.append(name, value);
       }
     });
 
@@ -180,11 +200,14 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
                         ? (entry[field.name] || []).join(", ")
                         : field.type === "file"
                         ? entry[field.name] ? (
-                            <img
-                              src={entry[field.name]}
-                              alt=""
-                              className="w-16 h-16 object-cover rounded"
-                            />
+                            <a
+                              href={entry[field.name]}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-500 underline"
+                            >
+                              View File
+                            </a>
                           ) : (
                             "-"
                           )
@@ -319,6 +342,8 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
                           field.name,
                           field.type === "boolean"
                             ? e.target.checked
+                            : field.type === "number"
+                            ? Number(e.target.value)
                             : e.target.value
                         )
                       }
