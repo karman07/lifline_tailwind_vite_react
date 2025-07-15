@@ -1,18 +1,21 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import { Toaster } from "react-hot-toast";
-import Sidebar from "./components/Sidebar";
 import UsersPage from "./pages/Users";
 import Books from "./pages/Books";
 import Courses from "./pages/Course";
 import ResearchProjects from "./pages/ResearchProjects";
 import Podcasts from "./pages/Podcast";
+import AdminPositions from "./pages/AdminPositions";
+import Workshops from "./pages/Workshops";
+import Journals from "./pages/Journals";
+import Chapters from "./pages/Chapters";
 
-const isAuthenticated = () => {
-  const token = localStorage.getItem("token");
-  return !!token;
-};
+import Layout from "./components/Layout";
+
+const isAuthenticated = () => !!localStorage.getItem("token");
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   return isAuthenticated() ? children : <Navigate to="/" />;
@@ -22,64 +25,49 @@ function App() {
   return (
     <Router>
       <Toaster position="top-center" />
-      {isAuthenticated() && <Sidebar />}
       <Routes>
-        {/* Login route (public) */}
-        <Route
-          path="/"
-          element={
-            isAuthenticated() ? <Navigate to="/users" /> : <Login />
-          }
-        />
+   
+        <Route path="/" element={isAuthenticated() ? <Navigate to="/users" /> : <Login />} />
 
-        {/* Private routes */}
         <Route
           path="/home"
-          element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
-          }
+          element={<PrivateRoute><Layout><Home /></Layout></PrivateRoute>}
         />
         <Route
           path="/users"
-          element={
-            <PrivateRoute>
-              <UsersPage />
-            </PrivateRoute>
-          }
+          element={<PrivateRoute><Layout><UsersPage /></Layout></PrivateRoute>}
         />
         <Route
           path="/books"
-          element={
-            <PrivateRoute>
-              <Books />
-            </PrivateRoute>
-          }
+          element={<PrivateRoute><Layout><Books /></Layout></PrivateRoute>}
         />
         <Route
           path="/course"
-          element={
-            <PrivateRoute>
-              <Courses />
-            </PrivateRoute>
-          }
+          element={<PrivateRoute><Layout><Courses /></Layout></PrivateRoute>}
         />
         <Route
           path="/research"
-          element={
-            <PrivateRoute>
-              <ResearchProjects />
-            </PrivateRoute>
-          }
+          element={<PrivateRoute><Layout><ResearchProjects /></Layout></PrivateRoute>}
         />
         <Route
           path="/podcast"
-          element={
-            <PrivateRoute>
-              <Podcasts />
-            </PrivateRoute>
-          }
+          element={<PrivateRoute><Layout><Podcasts /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/admin-positions"
+          element={<PrivateRoute><Layout><AdminPositions /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/workshops"
+          element={<PrivateRoute><Layout><Workshops /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/journals"
+          element={<PrivateRoute><Layout><Journals /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/chapters"
+          element={<PrivateRoute><Layout><Chapters /></Layout></PrivateRoute>}
         />
       </Routes>
     </Router>
