@@ -14,12 +14,16 @@ import Journals from "./pages/Journals";
 import Chapters from "./pages/Chapters";
 
 import Layout from "./components/Layout";
+import Subscribers from "./pages/Subscribers";
+import Testimonials from "./pages/Testimonials";
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   return isAuthenticated() ? children : <Navigate to="/" />;
 };
+
+// localStorage.clear()
 
 function App() {
   return (
@@ -68,6 +72,14 @@ function App() {
         <Route
           path="/chapters"
           element={<PrivateRoute><Layout><Chapters /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/subscribers"
+          element={<PrivateRoute><Layout><Subscribers /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/testimonials"
+          element={<PrivateRoute><Layout><Testimonials /></Layout></PrivateRoute>}
         />
       </Routes>
     </Router>

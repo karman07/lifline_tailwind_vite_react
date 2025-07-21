@@ -8,6 +8,8 @@ import {
   Presentation,
   LibraryBig,
   BookMarked,
+  UserCheck,
+  MessageSquareQuote,
 } from "lucide-react";
 
 export const NAV_LINKS = [
@@ -20,4 +22,6 @@ export const NAV_LINKS = [
   { name: "Workshops", to: "/workshops", icon: Presentation },
   { name: "Journals", to: "/journals", icon: LibraryBig },
   { name: "Chapters", to: "/chapters", icon: BookMarked },
+  { name: "Subscribers", to: "/subscribers", icon: UserCheck },
+  { name: "Testimonials", to: "/testimonials", icon: MessageSquareQuote },
 ];
