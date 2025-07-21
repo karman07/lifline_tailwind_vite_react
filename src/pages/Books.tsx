@@ -19,7 +19,7 @@ const Books = () => {
       apiPath={`${BASE_URL}/books`}
       schema={userSchema}
       token={token}
-      title="User Management"
+      title="Books Management"
     />
   );
 };
