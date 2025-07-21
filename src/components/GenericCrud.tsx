@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2, Plus, X, Eye, ChevronLeft, ChevronRight } from "lucide-react";
-import { COLORS } from "@/constants/colors";
 
 export type SchemaField = {
   name: string;

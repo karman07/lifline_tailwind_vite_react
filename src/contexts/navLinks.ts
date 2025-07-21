@@ -10,6 +10,7 @@ import {
   BookMarked,
   UserCheck,
   MessageSquareQuote,
+  School,
 } from "lucide-react";
 
 export const NAV_LINKS = [
@@ -24,4 +25,5 @@ export const NAV_LINKS = [
   { name: "Chapters", to: "/chapters", icon: BookMarked },
   { name: "Subscribers", to: "/subscribers", icon: UserCheck },
   { name: "Testimonials", to: "/testimonials", icon: MessageSquareQuote },
+  { name: "Students", to: "/students", icon: School },
 ];
