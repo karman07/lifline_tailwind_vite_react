@@ -17,6 +17,7 @@ import Layout from "./components/Layout";
 import Subscribers from "./pages/Subscribers";
 import Testimonials from "./pages/Testimonials";
 import Students from "./pages/Students";
+import Poems from "./pages/Poems";
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -85,6 +86,10 @@ function App() {
         <Route
           path="/students"
           element={<PrivateRoute><Layout><Students/></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/poems"
+          element={<PrivateRoute><Layout><Poems/></Layout></PrivateRoute>}
         />
       </Routes>
     </Router>

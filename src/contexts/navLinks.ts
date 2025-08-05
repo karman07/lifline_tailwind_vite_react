@@ -11,6 +11,7 @@ import {
   UserCheck,
   MessageSquareQuote,
   School,
+  Music,
 } from "lucide-react";
 
 export const NAV_LINKS = [
@@ -26,4 +27,5 @@ export const NAV_LINKS = [
   { name: "Subscribers", to: "/subscribers", icon: UserCheck },
   { name: "Testimonials", to: "/testimonials", icon: MessageSquareQuote },
   { name: "Students", to: "/students", icon: School },
+  { name: "Poems & Songs", to: "/poems", icon: Music }
 ];
