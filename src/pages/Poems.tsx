@@ -4,7 +4,9 @@ import GenericCrud, { SchemaField } from "../components/GenericCrud";
 const token = localStorage.getItem("token")!;
 
 const schema: SchemaField[] = [
-  { name: "description", type: "string", required: true },
+  { name: "title", type: "string", required: true },
+  { name: "content", type: "string", required: true },
+  { name: "youtubeLink", type: "string", required: true },
 ];
 
 export default function Poems() {
