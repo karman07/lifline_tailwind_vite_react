@@ -23,6 +23,7 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [viewEntry, setViewEntry] = useState<any | null>(null);
   const [files, setFiles] = useState<Record<string, File | null>>({});
+  const [existingFiles, setExistingFiles] = useState<Record<string, string>>({});
   
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,6 +60,15 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
     if (entry) {
       setForm(entry);
       setEditingId(entry._id);
+      
+      // Set existing files for editing mode
+      const existingFileData: Record<string, string> = {};
+      schema.forEach((field) => {
+        if (field.type === "file" && entry[field.name]) {
+          existingFileData[field.name] = entry[field.name];
+        }
+      });
+      setExistingFiles(existingFileData);
     } else {
       const emptyForm: Record<string, any> = {};
       schema.forEach((field) => {
@@ -69,6 +79,7 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
       });
       setForm(emptyForm);
       setEditingId(null);
+      setExistingFiles({});
     }
     setFiles({});
     setModalOpen(true);
@@ -79,6 +90,7 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
     setForm({});
     setEditingId(null);
     setFiles({});
+    setExistingFiles({});
   };
 
   const handleChange = (name: string, value: any) => {
@@ -87,6 +99,27 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
 
   const handleFileChange = (name: string, file: File) => {
     setFiles((prev) => ({ ...prev, [name]: file }));
+    // Remove existing file reference when new file is selected
+    setExistingFiles((prev) => {
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
+    });
+  };
+
+  const removeFile = (name: string) => {
+    setFiles((prev) => {
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
+    });
+    setExistingFiles((prev) => {
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
+    });
+    // Also remove from form data
+    setForm((prev) => ({ ...prev, [name]: null }));
   };
 
   const handleArrayChange = (name: string, value: string, index: number) => {
@@ -112,10 +145,20 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
     for (const field of schema) {
       if (field.required) {
         const isFile = field.type === "file";
-        const hasValue = isFile ? files[field.name] : form[field.name];
-        if (!hasValue || hasValue === "") {
-          alert(`Please fill out the required field: ${field.name}`);
-          return;
+        if (isFile) {
+          // For file fields, check if there's either a new file or existing file
+          const hasNewFile = files[field.name];
+          const hasExistingFile = existingFiles[field.name];
+          if (!hasNewFile && !hasExistingFile) {
+            alert(`Please select a file for the required field: ${field.name}`);
+            return;
+          }
+        } else {
+          const hasValue = form[field.name];
+          if (!hasValue || hasValue === "") {
+            alert(`Please fill out the required field: ${field.name}`);
+            return;
+          }
         }
       }
     }
@@ -124,8 +167,13 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
 
     schema.forEach(({ name, type }) => {
       const value = form[name];
-      if (type === "file" && files[name]) {
-        formData.append(name, files[name] as Blob);
+      if (type === "file") {
+        // Only append new file if one is selected
+        if (files[name]) {
+          formData.append(name, files[name] as Blob);
+        }
+        // Note: If no new file is selected and we're editing, 
+        // the existing file will remain unchanged on the server
       } else if (type === "array") {
         (value || []).forEach((item: string) =>
           formData.append(`${name}[]`, item)
@@ -388,13 +436,51 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
                     {field.required && <span className="text-red-500 ml-1">*</span>}
                   </label>
                   {field.type === "file" ? (
-                    <input
-                      type="file"
-                      onChange={(e) =>
-                        handleFileChange(field.name, e.target.files?.[0]!)
-                      }
-                      className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                    <div className="space-y-2">
+                      {/* Show existing file if in edit mode */}
+                      {existingFiles[field.name] && (
+                        <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm text-gray-600">Current file:</span>
+                              <a
+                                href={existingFiles[field.name]}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-600 hover:text-blue-800 underline text-sm"
+                              >
+                                View Current File
+                              </a>
+                            </div>
+                            <button
+                              onClick={() => removeFile(field.name)}
+                              className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {/* File input - always show, but with different label based on context */}
+                      <div>
+                        <label className="text-sm text-gray-600 block mb-1">
+                          {existingFiles[field.name] ? "Replace with new file:" : "Select file:"}
+                        </label>
+                        <input
+                          type="file"
+                          onChange={(e) =>
+                            handleFileChange(field.name, e.target.files?.[0]!)
+                          }
+                          className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                      {/* Show selected new file */}
+                      {files[field.name] && (
+                        <div className="text-sm text-green-600">
+                          New file selected: {files[field.name]?.name}
+                        </div>
+                      )}
+                    </div>
                   ) : field.type === "array" ? (
                     <>
                       {(form[field.name] || []).map((item: string, idx: number) => (
@@ -511,7 +597,7 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
         </div>
       )}
 
-      {/* <style dangerouslySetInnerHTML={{
+      <style dangerouslySetInnerHTML={{
         __html: `
           .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
@@ -528,7 +614,7 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
             background: #a8a8a8;
           }
         `
-      }} /> */}
+      }} />
     </div>
   );
 };
