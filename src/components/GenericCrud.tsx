@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2, Plus, X, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { BASE_URL } from "@/constants/config";
 
 export type SchemaField = {
   name: string;
@@ -329,7 +330,7 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
                         : field.type === "file"
                         ? entry[field.name] ? (
                             <a
-                              href={entry[field.name]}
+                              href={BASE_URL + entry[field.name]}
                               target="_blank"
                               rel="noreferrer"
                               className="text-blue-600 hover:text-blue-800 underline"
