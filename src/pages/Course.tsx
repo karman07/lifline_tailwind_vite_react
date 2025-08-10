@@ -2,6 +2,7 @@ import GenericCrud, { SchemaField } from "@/components/GenericCrud";
 import { BASE_URL } from "@/constants/config";
 
 const courseSchema: SchemaField[] = [
+  { name: "priority", type: "number", required: true },
   { name: "title", type: "string", required: true },
   { name: "description", type: "string", required: true },
   { name: "thumbnail", type: "file", required: true },
