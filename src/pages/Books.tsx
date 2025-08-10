@@ -2,6 +2,7 @@ import GenericCrud, { SchemaField } from "@/components/GenericCrud";
 import { BASE_URL } from "@/constants/config";
 
 const userSchema: SchemaField[] = [
+  { name: "priority", type: "number", required: true },
   { name: "title", type: "string", required: true },
   { name: "description", type: "string", required: true },
   { name: "price", type: "string", required: true },
@@ -9,7 +10,6 @@ const userSchema: SchemaField[] = [
   { name: "tableOfContents", type: "array" },
   { name: "link", type: "string" },
 ];
-;
 
 const token = localStorage.getItem("token") ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODZiYTVhY2E1N2JkZWQyYTNhOTUxZjkiLCJlbWFpbCI6Imthcm1hbnNpbmdoYXJvcmEwNkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTE4ODg2NzksImV4cCI6MTc1MTk3NTA3OX0.0KWCj-jvCPoiTZrvnPZkJx64zCmbLs-PFlYFEAYBsO8";
 console.log(token)
