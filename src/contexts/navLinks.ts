@@ -12,6 +12,10 @@ import {
   MessageSquareQuote,
   School,
   Music,
+  FileText,
+  Calendar,
+  Newspaper,
+  Mail,
 } from "lucide-react";
 
 export const NAV_LINKS = [
@@ -27,5 +31,9 @@ export const NAV_LINKS = [
   { name: "Subscribers", to: "/subscribers", icon: UserCheck },
   { name: "Testimonials", to: "/testimonials", icon: MessageSquareQuote },
   { name: "Students", to: "/students", icon: School },
-  { name: "Poems & Songs", to: "/poems", icon: Music }
+  { name: "Poems & Songs", to: "/poems", icon: Music },
+  { name: "Articles", to: "/articles", icon: FileText },
+  { name: "Conferences", to: "/conferences", icon: Calendar },
+  { name: "Publications", to: "/publications", icon: Newspaper },
+  { name: "Contact", to: "/contact", icon: Mail },
 ];

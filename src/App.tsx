@@ -12,12 +12,16 @@ import AdminPositions from "./pages/AdminPositions";
 import Workshops from "./pages/Workshops";
 import Journals from "./pages/Journals";
 import Chapters from "./pages/Chapters";
-
-import Layout from "./components/Layout";
 import Subscribers from "./pages/Subscribers";
 import Testimonials from "./pages/Testimonials";
 import Students from "./pages/Students";
 import Poems from "./pages/Poems";
+import Articles from "./pages/Articles";
+import Conferences from "./pages/Conferences";
+import Publications from "./pages/Publications";
+import Contact from "./pages/Contact";
+
+import Layout from "./components/Layout";
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -90,6 +94,22 @@ function App() {
         <Route
           path="/poems"
           element={<PrivateRoute><Layout><Poems/></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/articles"
+          element={<PrivateRoute><Layout><Articles /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/conferences"
+          element={<PrivateRoute><Layout><Conferences /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/publications"
+          element={<PrivateRoute><Layout><Publications /></Layout></PrivateRoute>}
+        />
+        <Route
+          path="/contact"
+          element={<PrivateRoute><Layout><Contact /></Layout></PrivateRoute>}
         />
       </Routes>
     </Router>

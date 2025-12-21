@@ -7,9 +7,7 @@ const podcastSchema: SchemaField[] = [
   { name: "date", type: "string", required: true },
 ];
 
-const token =
-  localStorage.getItem("token") ??
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODZiYTVhY2E1N2JkZWQyYTNhOTUxZjkiLCJlbWFpbC...";
+const token = localStorage.getItem("token") ?? "";
 
 const Podcasts = () => {
   return (

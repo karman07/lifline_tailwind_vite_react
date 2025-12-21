@@ -1,9 +1,9 @@
 import { BASE_URL } from "@/constants/config";
 import GenericCrud, { SchemaField } from "../components/GenericCrud";
 
-const token = localStorage.getItem("token")!;
+const token = localStorage.getItem("token") ?? "";
 
-const schema : SchemaField[] =  [
+const chapterSchema: SchemaField[] = [
   { name: "chapter", type: "string", required: true },
   { name: "book", type: "string", required: true },
   { name: "type", type: "string", required: true },
@@ -16,7 +16,7 @@ export default function Chapters() {
       title="Chapters & PDFs"
       token={token}
       apiPath={`${BASE_URL}/chapters`}
-      schema={schema}
+      schema={chapterSchema}
     />
   );
 }
