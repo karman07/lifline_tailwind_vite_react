@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2, Plus, X, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { BASE_URL } from "@/constants/config";
+import toast from "react-hot-toast";
 
 export type SchemaField = {
   name: string;
@@ -51,8 +52,9 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
       if (currentPage > maxPages && maxPages > 0) {
         setCurrentPage(1);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error(err.response?.data?.message || "Failed to fetch data");
     }
     setLoading(false);
   };
@@ -151,13 +153,13 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
           const hasNewFile = files[field.name];
           const hasExistingFile = existingFiles[field.name];
           if (!hasNewFile && !hasExistingFile) {
-            alert(`Please select a file for the required field: ${field.name}`);
+            toast.error(`Please select a file for the required field: ${field.name}`);
             return;
           }
         } else {
           const hasValue = form[field.name];
           if (!hasValue || hasValue === "") {
-            alert(`Please fill out the required field: ${field.name}`);
+            toast.error(`Please fill out the required field: ${field.name}`);
             return;
           }
         }
@@ -189,15 +191,18 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
         await axios.patch(`${apiPath}/${editingId}`, formData, {
           headers: { ...headers, "Content-Type": "multipart/form-data" },
         });
+        toast.success("Entry updated successfully!");
       } else {
         await axios.post(apiPath, formData, {
           headers: { ...headers, "Content-Type": "multipart/form-data" },
         });
+        toast.success("Entry created successfully!");
       }
       closeModal();
       fetchData();
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error(err.response?.data?.message || "Failed to save entry");
     }
   };
 
@@ -205,9 +210,11 @@ const GenericCrud: React.FC<Props> = ({ apiPath, schema, token, title }) => {
     if (confirm("Are you sure you want to delete this item?")) {
       try {
         await axios.delete(`${apiPath}/${id}`, { headers });
+        toast.success("Entry deleted successfully!");
         fetchData();
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
+        toast.error(err.response?.data?.message || "Failed to delete entry");
       }
     }
   };
