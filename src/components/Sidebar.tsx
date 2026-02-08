@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, LogOut } from "lucide-react";
 import { NAV_LINKS } from "@/contexts/navLinks";
 import { COLORS } from "@/constants/colors";
@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [user, setUser] = useState<{ name: string; email: string; image?: string } | null>(null);
 
   useEffect(() => {
