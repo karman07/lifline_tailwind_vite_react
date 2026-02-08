@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../constants/config";
 import { COLORS } from "../constants/colors";
@@ -8,7 +8,7 @@ import { COLORS } from "../constants/colors";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -28,15 +28,16 @@ const Login = () => {
         return;
       }
 
-      console.log(res.data.accessToken)
-
       localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("role", role);
-      localStorage.setItem("user", JSON.stringify(res.data.user))
-      console.log(localStorage.getItem("user"))
-      console.log(localStorage.getItem("token"))
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      
       toast.success("Login successful");
-      navigate("/users");
+      
+      // Force navigation after localStorage is set
+      setTimeout(() => {
+        window.location.href = "/users";
+      }, 100);
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Login failed");
       console.log(err)
